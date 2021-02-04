@@ -1,0 +1,49 @@
+openapi: 3.0.3
+info:
+  title: URL shortener API
+  version: 0.0.1
+  description: Simple API for URL shortener project that is created as labs for SW testing course.
+  contact:
+    name: Taras Bulba
+    url: https://github.com/future-stardust/url-shortener-specification
+    email: taras1522@zaporija.net
+servers:
+  - url: http://localhost:8080
+    description: URL shortener running locally
+externalDocs:
+  description: GitHub project for the OpenAPI specification of URL shortener API
+  url: https://github.com/future-stardust/url-shortener-specification
+paths:
+  /hello:
+    get:
+      operationId: makeHello
+      summary: Make example request. Just because we can!
+      description: This endpoint is completely useless. Just an example. Hah.
+      tags:
+        - examplestructure
+      responses:
+        '200':
+          description: Hello is successfull. REST API in friendly mood
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/examplestructure"
+
+components:
+  schemas:
+    examplestructure:
+      type: object
+      properties:
+        first:
+          type: string
+          description: First something
+          example: "Fiiiirst!"
+        second:
+          type: string
+          description: Second something
+          example: "Second."
+
+
+tags:
+  - name: exampletag
+    description: API for example, obviously
