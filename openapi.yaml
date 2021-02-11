@@ -14,92 +14,127 @@ externalDocs:
   description: GitHub project for the OpenAPI specification of URL shortener API
   url: https://github.com/future-stardust/url-shortener-specification
 paths:
-  /login:
+  /users/signup:
     post:
-      operationId: login
+      tags:
+        - users
+      operationId: signup
       requestBody:
         description:
-          User login operation. "Success" response contains "bearer" token that should be included
-          into all requests that require authorization.
+          User sign up. "Success" response means that user was created
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/loginpassword'
+              $ref: '#/components/schemas/signUpRequest'
       responses:
         '200':
-          description: Authorized successfully
-          content:
+          description: New user was created
+        '400':
+          description: Malformed request
+          content: 
             application/json:
-              schema:
-                $ref: "#/components/schemas/loginsuccess"
-        '401':
-          description: Login failed (no such user or password is wrong)
+              schema: 
+                $ref: '#/components/schemas/signUpResponseError'
 
-  /hello:
-    get:
-      operationId: makeHello
-      summary: Make example request. Just because we can!
-      description: This endpoint is completely useless. Just an example. Hah.
-      security:
-        - bearerAuth: []
+  /users/signin:
+    post:
       tags:
-        - examplestructure
-      responses:
+        - users
+      operationId: signin
+      requestBody: 
+        description: 
+          User sign-in. "Success" response contains bearer token
+        required: true
+        content: 
+          application/json:
+            schema: 
+              $ref: '#/components/schemas/signInRequest'
+      responses: 
         '200':
-          description: Hello is successfull. REST API in friendly mood
-          content:
+          description: Response with bearer token
+          content: 
             application/json:
-              schema:
-                $ref: "#/components/schemas/examplestructure"
+              schema: 
+                $ref: '#/components/schemas/signInResponseOk'
+        '400':
+          description: Malformed request/required params are missing
+        '404':
+          description: User with provided credentials not found
+  
+  /users/signout:
+    post:
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - users
+      operationId: signout
+      responses: 
+        '200':
+          description: Token sent via Authorization header is not longer valid
+        '401':
+          description: User is not authorized
+
 
 components:
   schemas:
-    examplestructure:
+    signUpRequest:
       type: object
       properties:
-        first:
+        email:
           type: string
-          description: First something
-          example: "Fiiiirst!"
-        second:
-          type: string
-          description: Second something
-          example: "Second."
-    loginpassword:
-      type: object
-      properties:
+          description: email
+          example: "test@example.com"
         username:
           type: string
-          description: user name
-          example: sherlock
+          description: username
+          example: "example"
         password:
           type: string
-          description: user password
-          example: blahblahblah
-    loginsuccess:
+          description: password
+          example: "very-strong-password"
+    signUpResponseError:
       type: object
-      properties:
-        username:
-          type: string
-          example: sherlock
-        access_token:
-          type: string
-          example: eyJhbGciOiJIUzI1...
-        token_type:
-          type: string
-          example: Bearer
-        expires_in:
+      properties: 
+        reason_code:
           type: integer
-          description: Token life time (in seconds)
-          example: 3600
+          enum: [0, 1, 2]
+          description: >
+            * 0 - Malformed request
+
+            * 1 - Username is already used
+
+            * 2 - Email is already used
+        reason_text:
+          type: integer
+          description: human-interpretable error reason
+          example: "Cannot parse json"
+
+    signInRequest:
+      type: object
+      properties: 
+        email:
+          type: string
+          description: email
+          example: "test@example.com"
+        password:
+          type: string
+          description: password
+          example: "very-strong-password"
+    signInResponseOk:
+      type: object
+      properties: 
+        token:
+          type: string
+          description: UUID4 bearer token
+          example: "31e6dcae-e0ab-4808-b4d7-38c6c4768c66"
+
   securitySchemes:
     bearerAuth:
       type: http
       scheme: bearer
-      bearerFormat: JWT
+      bearerFormat: UUID4
 
 tags:
-  - name: exampletag
-    description: API for example, obviously
-
+  - name: users
+    description: User-related part of the API
