@@ -2,6 +2,8 @@
 
 This is an [OpenAPI](https://www.openapis.org/) specification for a URL shortener project.
 
+A document regarding project specification can be found [here](https://docs.google.com/document/d/1RIQWpiXRuxUmI_VhMZjo-UgxMxjEIXIpC2tmMY_ZpuE/edit?usp=sharing).
+
 ## Tools
 
 ### Option #1
