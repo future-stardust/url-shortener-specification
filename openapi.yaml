@@ -284,7 +284,7 @@ components:
     bearerAuth:
       type: http
       scheme: bearer
-      bearerFormat: UUID4
+      bearerFormat: JWT
 
 tags:
   - name: users
