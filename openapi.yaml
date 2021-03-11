@@ -35,7 +35,7 @@ paths:
               schema: 
                 $ref: '#/components/schemas/signUpResponseError'
 
-  /users/signin:
+  /login:
     post:
       tags:
         - users
@@ -60,19 +60,6 @@ paths:
         '404':
           description: User with provided credentials not found
   
-  /users/signout:
-    post:
-      security:
-        - bearerAuth: [ ]
-      tags:
-        - users
-      operationId: signout
-      responses: 
-        '204':
-          description: Token sent via Authorization header is not longer valid
-        '401':
-          description: User is not authorized
-
   /urls/shorten:
     post:
       tags:
@@ -199,7 +186,7 @@ components:
     signInRequest:
       type: object
       properties: 
-        email:
+        username:
           type: string
           description: email
           example: "test@example.com"
